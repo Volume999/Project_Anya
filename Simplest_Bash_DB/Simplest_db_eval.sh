@@ -74,7 +74,7 @@ before_test() {
     input_size=$2
     echo "$input_size"
     # shellcheck disable=SC2154
-    cat "$read_stats_filename" | head -n "$input_size" > "$db_name"
+    cat "$read_stats_filename" | head -n "$input_size" > "$db_name" # Copy the Input size number of records to the database
   fi
 }
 
@@ -85,7 +85,7 @@ test_get() {
   i=0
   while [[ $i -lt "$test_get_number_of_repetitions" ]]
   do
-    id=$(jot -r 1 0 "$input_size")
+    id=$(jot -r 1 0 "$input_size") # Generate random ID
     db_get "$id" &> /dev/null
     ((i = i + 1))
   done
@@ -122,8 +122,8 @@ test() {
     then
       work=$test_get_number_of_repetitions
     fi
-    throughput=$(echo 4k $work $runtime /p | dc)
-    latency=$(echo 4k $runtime $work /p | dc)
+    throughput=$(echo 4k $work $runtime /p | dc) # Using 4 precision point, divide work by runtime
+    latency=$(echo 4k $runtime $work /p | dc) # Using 4 precision point, divide runtime by work
     record_stats "$test_function" "$load_counter" "$runtime" "$latency" "$throughput"
     load_counter=$((load_counter + load_increment))
   done
