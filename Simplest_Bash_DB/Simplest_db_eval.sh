@@ -1,30 +1,71 @@
 # Import the DBMS
 source Simplest_db.sh
 
+# Documentation
+# In this script we measure the performance of the System Using 2 metrics
+# Throughput and Latency
+# Writing: Increasing the number of records to write
+# Reading; Increasing the size of the DB over which to perform reads
+# Performance measuring done in style of Property-tests with generators and evaluators
+
+# Running Evaluations:
+# If you are planning to run Read test, it is better to setup a Read DB from which to copy data
+# $ setup_read_db
+# Then execute test function with the name of the test
+# $ test test_get or test test_set_string
+# Evaluation will appear in the stats file
+
 # Configuration
+
+# String size for insertion
 large_string_length=100
 #medium_string_length=50
 #small_string_length=20
 
+# For write: How many times to write to a disk
+# For reads: On a DB of which size to execute reads
 load_upper_bound=100000
 load_lower_bound=10000
 load_increment=10000
 
+# For reads: How many times will a read function be executed
 test_get_number_of_repetitions=10000
 
+# File where the stats will be posted
 stats_filename='Simplest_db_eval_stats'
+
+# Optimization: Backup DB from which a dataset will be formed for GET function (otherwise it is very slow)
+
 read_stats_filename='Simplest_db_eval_read_db'
-# Pass Length of the string as parameter
+
+# Function generates a random string
+# Parameter: Length of string
 gen_string() {
   openssl rand -hex "$1"
 }
 
-# Testing
+# Function sets up a backup DB for read tests
+setup_read_db() {
+  i=0
+  db_truncate
+  while [[ "$i" -lt "$load_upper_bound" ]]
+  do
+    v=$(gen_string "$large_string_length")
+    db_set "$i" "$v"
+    ((i = i + 1))
+  done
+  # shellcheck disable=SC2154
+  cat "$db_name" > "$read_stats_filename"
+  db_truncate
+}
+
+# Prepare Statfile for testing
 before() {
   : > "$stats_filename"
   record_stats 'TestName' 'InputSize' 'Runtime(seconds)' 'Latency' 'Throughput'
 }
 
+# Prepare environment for each iteration of a test
 before_test() {
   function_name=$1
   db_truncate
@@ -89,6 +130,7 @@ test() {
 #  after
 }
 
+# Parameters: Test name, Input size, Runtime, Latency, Throughput
 record_stats() {
   echo "$1, $2, $3, $4, $5" >> "$stats_filename"
 }
