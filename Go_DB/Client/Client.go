@@ -1,6 +1,7 @@
 package Client
 
 import (
+	"Project_Anya/Go_DB/DBMS"
 	"bufio"
 	"errors"
 	"fmt"
@@ -41,6 +42,8 @@ func parseInput(tokens []string) (string, error) {
 
 func Run() {
 	reader := bufio.NewReader(os.Stdin)
+	_, _ = DBMS.Init()
+	//fmt.Println(db, err)
 	for {
 		input, _ := getInput(reader)
 		tokens := strings.Fields(input)
@@ -52,4 +55,5 @@ func Run() {
 			}
 		}
 	}
+
 }
