@@ -39,8 +39,14 @@ func (client *Client) parseCommand(tokens []string) (string, error) {
 		if len(tokens) != 1 {
 			return "", errors.New("help command does not take arguments")
 		}
-
-		return "Help Requested", nil
+		output := `API for AnyaDB:
+get {key: int} -> returns key if found, else returns an error
+set {key: int} {val: int} -> inserts value in db
+del {key: int} -> deletes the value from the db
+save -> save db state
+exit -> exit client
+ `
+		return output, nil
 	case "get":
 		if len(tokens) != 2 {
 			return "", errors.New("invalid arguments for get, see help")
@@ -72,6 +78,20 @@ func (client *Client) parseCommand(tokens []string) (string, error) {
 			return "", errors.New("exit does not take parameters")
 		}
 		return "", errors.New("exit")
+	case "del":
+		if len(tokens) != 2 {
+			return "", errors.New("invalid parameters for delete, see help")
+		}
+		if key, err := strconv.Atoi(tokens[1]); err != nil {
+			return "", errors.New("key must be an integer")
+		} else {
+			if err := client.dbms.Delete(key); err != nil {
+				return "", errors.New("key not found")
+			} else {
+				return "ok", nil
+			}
+		}
+
 	default:
 		return "", errors.New("invalid command")
 	}
@@ -87,6 +107,9 @@ func (client *Client) Run() {
 			fmt.Println(output)
 		} else {
 			if err.Error() == "exit" {
+				if err := client.dbms.Save(); err != nil {
+					fmt.Println("Failed to save database")
+				}
 				break
 			}
 			fmt.Println(err)
