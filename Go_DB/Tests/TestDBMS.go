@@ -1,4 +1,4 @@
-package Testing
+package Tests
 
 import (
 	"Project_Anya/Go_DB/DBMS"
