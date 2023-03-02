@@ -1,15 +1,15 @@
 package main
 
 import (
-	"Project_Anya/Go_DB/Client"
-	"Project_Anya/Go_DB/DBMS"
+	"Project_Anya/GoDB/Client"
+	"Project_Anya/GoDB/DBMS"
 	"bufio"
 	"os"
 	"path/filepath"
 )
 
 const (
-	DBABSPATH = "Go_DB/Database/db"
+	DBABSPATH = "GoDB/Database/db"
 )
 
 func main() {

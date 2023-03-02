@@ -1,7 +1,7 @@
 package Tests
 
 import (
-	"Project_Anya/Go_DB/DBMS"
+	"Project_Anya/GoDB/DBMS"
 	"fmt"
 	"path/filepath"
 )

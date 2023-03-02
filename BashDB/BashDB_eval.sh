@@ -1,5 +1,5 @@
 # Import the DBMS
-source Simplest_db.sh
+source BashDB.sh
 
 # Documentation
 # In this script we measure the performance of the System Using 2 metrics

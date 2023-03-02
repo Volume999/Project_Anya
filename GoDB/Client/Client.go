@@ -1,7 +1,7 @@
 package Client
 
 import (
-	"Project_Anya/Go_DB/DBMS"
+	"Project_Anya/GoDB/DBMS"
 	"bufio"
 	"errors"
 	"fmt"

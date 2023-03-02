@@ -112,8 +112,9 @@ func (dbms *Dbms) Set(key int, value string) {
 	dbms.hashTable[key] = offset
 }
 
+// TODO: Add Filepath to the property of DB
 func (dbms *Dbms) Save() error {
-	dbPath, _ := filepath.Abs("Go_DB/Database/db")
+	dbPath, _ := filepath.Abs("GoDB/Database/db")
 	err := os.WriteFile(dbPath, dbms.db, 'w')
 	return err
 }
