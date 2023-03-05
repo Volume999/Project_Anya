@@ -129,3 +129,7 @@ func (dbms *Dbms) Delete(key int) error {
 		return errors.New("key does not exist")
 	}
 }
+
+func (dbms *Dbms) Size() int {
+	return len(dbms.hashTable)
+}
