@@ -17,6 +17,7 @@ const (
 type Dbms struct {
 	hashTable map[int]int
 	db        []byte
+	filepath  string
 }
 
 func Init(dbPath string) (Dbms, error) {
@@ -25,6 +26,7 @@ func Init(dbPath string) (Dbms, error) {
 	dbms := Dbms{
 		hashTable: map[int]int{},
 		db:        db,
+		filepath:  dbPath,
 	}
 
 	dbms.initHashTable()
@@ -114,7 +116,7 @@ func (dbms *Dbms) Set(key int, value string) {
 
 // TODO: Add Filepath to the property of DB
 func (dbms *Dbms) Save() error {
-	dbPath, _ := filepath.Abs("GoDB/Database/db")
+	dbPath, _ := filepath.Abs(dbms.filepath)
 	err := os.WriteFile(dbPath, dbms.db, 'w')
 	return err
 }
@@ -132,4 +134,9 @@ func (dbms *Dbms) Delete(key int) error {
 
 func (dbms *Dbms) Size() int {
 	return len(dbms.hashTable)
+}
+
+func (dbms *Dbms) Truncate() {
+	dbms.db = []byte{}
+	dbms.hashTable = map[int]int{}
 }
