@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Job is run successfully!"
-      - run: echo "Job is triggered by ${{github.event_name}} event"
+      - run: echo "Job is triggered by ${{github.event_name}} event!"
       - run: echo "OS - ${{runner.os}}, Branch name - ${{github.ref}}, repository - ${{github.repository}}"
       - name: Check out repository code
         uses: actions/checkout@v3
