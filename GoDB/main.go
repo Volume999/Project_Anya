@@ -4,6 +4,7 @@ import (
 	"Project_Anya/GoDB/Client"
 	"Project_Anya/GoDB/DBMS"
 	"bufio"
+	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -19,9 +20,14 @@ func main() {
 		panic("Could not initialize database")
 	}
 	reader := bufio.NewReader(os.Stdin)
-	client := Client.Init(&dbms, reader)
+	writer := bufio.NewWriter(os.Stdout)
+	client := Client.Init(&dbms, reader, writer)
 	defer func() {
 		_ = dbms.Save()
+		_ = writer.Flush()
 	}()
-	client.Run()
+	err = client.Run()
+	if err != nil {
+		fmt.Printf("Writer error: %v\n", err)
+	}
 }

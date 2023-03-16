@@ -12,10 +12,11 @@ import (
 type Client struct {
 	dbms   *DBMS.Dbms
 	reader *bufio.Reader
+	writer *bufio.Writer
 }
 
-func Init(dbms *DBMS.Dbms, reader *bufio.Reader) Client {
-	return Client{dbms: dbms, reader: reader}
+func Init(dbms *DBMS.Dbms, reader *bufio.Reader, writer *bufio.Writer) Client {
+	return Client{dbms: dbms, reader: reader, writer: writer}
 }
 
 func (client *Client) getInput() (string, error) {
@@ -72,7 +73,7 @@ exit -> exit client
 			return "", errors.New("save does not take parameters")
 		}
 		_ = client.dbms.Save()
-		return "", nil
+		return "Database Saved Successfully", nil
 	case "exit":
 		if len(tokens) != 1 {
 			return "", errors.New("exit does not take parameters")
@@ -97,22 +98,32 @@ exit -> exit client
 	}
 }
 
-func (client *Client) Run() {
+func (client *Client) Run() error {
 	//reader := bufio.NewReader(os.Stdin)
 	//fmt.Println(db, err)
 	for {
 		input, _ := client.getInput()
 		output, err := client.parseInput(input)
+		var _ int
+		var printErr error
 		if err == nil {
-			fmt.Println(output)
+			//fmt.Println(output)
+			_, printErr = fmt.Fprintf(client.writer, "%v\n", output)
 		} else {
 			if err.Error() == "exit" {
 				if err := client.dbms.Save(); err != nil {
-					fmt.Println("Failed to save database")
+					_, printErr = fmt.Fprintf(client.writer, "Failed to save database\n")
+					//fmt.Println("Failed to save database")
 				}
-				break
+				return nil
 			}
-			fmt.Println(err)
+			_, printErr = fmt.Fprintf(client.writer, "%v\n", err.Error())
+			//fmt.Println(err)
+		}
+		if printErr != nil {
+			return errors.New("writer client is not functioning")
+		} else {
+			_ = client.writer.Flush()
 		}
 	}
 }
