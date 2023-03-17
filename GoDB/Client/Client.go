@@ -98,6 +98,7 @@ exit -> exit client
 	}
 }
 
+// Run TODO: Refactor
 func (client *Client) Run() error {
 	//reader := bufio.NewReader(os.Stdin)
 	//fmt.Println(db, err)
@@ -112,7 +113,7 @@ func (client *Client) Run() error {
 		} else {
 			if err.Error() == "exit" {
 				if err := client.dbms.Save(); err != nil {
-					_, printErr = fmt.Fprintf(client.writer, "Failed to save database\n")
+					_, _ = fmt.Fprintf(client.writer, "Failed to save database\n")
 					//fmt.Println("Failed to save database")
 				}
 				return nil
