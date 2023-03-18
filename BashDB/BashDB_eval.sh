@@ -32,7 +32,7 @@ load_increment=10000
 test_get_number_of_repetitions=10000
 
 # File where the stats will be posted
-stats_filename='Simplest_db_eval_stats'
+stats_filename='Simplest_db_eval_stats.csv'
 
 # Optimization: Backup DB from which a dataset will be formed for GET function (otherwise it is very slow)
 

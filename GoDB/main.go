@@ -3,6 +3,7 @@ package main
 import (
 	"Project_Anya/GoDB/Client"
 	"Project_Anya/GoDB/DBMS"
+	"Project_Anya/GoDB/Evaluation"
 	"bufio"
 	"fmt"
 	"os"
@@ -10,11 +11,12 @@ import (
 )
 
 const (
-	DBABSPATH = "GoDB/Database/db"
+	DBAbsPath = "GoDB/Database/db"
+	RunMode   = "Eval" // Run | Eval
 )
 
-func main() {
-	dbPath, _ := filepath.Abs(DBABSPATH)
+func run() {
+	dbPath, _ := filepath.Abs(DBAbsPath)
 	dbms, err := DBMS.Init(dbPath)
 	if err != nil {
 		panic("Could not initialize database")
@@ -30,4 +32,16 @@ func main() {
 	if err != nil {
 		fmt.Printf("Writer error: %v\n", err)
 	}
+}
+
+func main() {
+	switch RunMode {
+	case "Run":
+		run()
+	case "Eval":
+		Evaluation.Eval()
+	default:
+		panic("invalid run mode")
+	}
+
 }
