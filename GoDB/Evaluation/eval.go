@@ -4,8 +4,10 @@ import (
 	"Project_Anya/GoDB/DBMS"
 	"fmt"
 	"github.com/dchest/uniuri"
+	"math/rand"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 const (
@@ -23,13 +25,13 @@ var statsFile *os.File
 var readDB DBMS.Dbms
 var writeDB DBMS.Dbms
 
-func gen_string(size int) string {
+func genString(size int) string {
 	return uniuri.NewLen(size)
 }
 
-func setup_read_db() {
+func setupReadDb() {
 	for i := 0; i < LoadUpperBound; i++ {
-		str := gen_string(LargeStringLength)
+		str := genString(LargeStringLength)
 		readDB.Set(i, str)
 	}
 	err := readDB.Save()
@@ -38,11 +40,32 @@ func setup_read_db() {
 	}
 }
 
-//func record_stats(row string) {
-//	statsAbsPath, err := filepath.Abs(StatsFilePath)
-//	os.OpenFile(statsAbsPath)
-//	os.WriteFile(statsAbsPath, row)
-//}
+//	func record_stats(row string) {
+//		statsAbsPath, err := filepath.Abs(StatsFilePath)
+//		os.OpenFile(statsAbsPath)
+//		os.WriteFile(statsAbsPath, row)
+//	}
+func test_get(inputSize int) {
+	for i := 0; i < TestNumberOfRepetitions; i++ {
+		id := rand.Intn(inputSize)
+		_, _ = readDB.Get(id)
+	}
+}
+
+func test_set(inputSize int) {
+	for i := 0; i < inputSize; i++ {
+		val := genString(LargeStringLength)
+		writeDB.Set(i, val)
+	}
+}
+
+func document(begin time.Time) {
+
+}
+
+func test() {
+	defer document(time.Now())
+}
 
 func init() {
 	statsAbsPath, err := filepath.Abs(StatsFilePath)
@@ -59,7 +82,7 @@ func init() {
 		panic(err)
 	}
 	if readDB.Size() == 0 {
-		setup_read_db()
+		setupReadDb()
 	}
 	evalWriteDBPath, _ := filepath.Abs(WriteDBPath)
 	writeDB, _ = DBMS.Init(evalWriteDBPath)
