@@ -39,7 +39,7 @@ func main() {
 	case "Run":
 		run()
 	case "Eval":
-		Evaluation.Eval()
+		Evaluation.RunEval()
 	default:
 		panic("invalid run mode")
 	}
